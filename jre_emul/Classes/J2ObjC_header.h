@@ -17,15 +17,13 @@
 
 #import "IOSObjectArray.h"
 #import "J2ObjC_common.h"
-#import "JavaObject.h"
-#import "NSObject+JavaObject.h"
 
 CF_EXTERN_C_BEGIN
 
 id JreStrAppend(__unsafe_unretained id *lhs, const char *types, ...);
 id JreStrAppendStrong(__strong id *lhs, const char *types, ...);
-id JreStrAppendVolatile(volatile_id *lhs, const char *types, ...);
-id JreStrAppendVolatileStrong(volatile_id *lhs, const char *types, ...);
+id JreStrAppendVolatile(__unsafe_unretained volatile_id *lhs, const char *types, ...);
+id JreStrAppendVolatileStrong(__strong volatile_id *lhs, const char *types, ...);
 id JreStrAppendArray(JreArrayRef lhs, const char *types, ...);
 
 CF_EXTERN_C_END
@@ -185,7 +183,7 @@ CF_EXTERN_C_END
     return JreAssignVolatileId(value, TYPE##_valueOfWith##CNAME##_([original VALUE_METHOD] OP 1)); \
   } \
   __attribute__((always_inline)) inline TYPE *JreBoxedPre##OPNAME##VolatileStrong##CNAME( \
-      volatile_id *value) { \
+      __strong volatile_id *value) { \
     TYPE *original = JreLoadVolatileId(value); \
     (void)nil_chk(original); \
     return JreVolatileStrongAssign(value, \
@@ -211,14 +209,14 @@ CF_EXTERN_C_END
     return original; \
   } \
   __attribute__((always_inline)) inline TYPE *JreBoxedPost##OPNAME##Volatile##CNAME( \
-      volatile_id *value) { \
+      __unsafe_unretained volatile_id *value) { \
     TYPE *original = JreLoadVolatileId(value); \
     (void)nil_chk(original); \
     JreAssignVolatileId(value, TYPE##_valueOfWith##CNAME##_([original VALUE_METHOD] OP 1)); \
     return original; \
   } \
   __attribute__((always_inline)) inline TYPE *JreBoxedPost##OPNAME##VolatileStrong##CNAME( \
-      volatile_id *value) { \
+      __strong volatile_id *value) { \
     TYPE *original = JreLoadVolatileId(value); \
     (void)nil_chk(original); \
     JreVolatileStrongAssign(value, TYPE##_valueOfWith##CNAME##_([original VALUE_METHOD] OP 1)); \
@@ -287,14 +285,14 @@ CF_EXTERN_C_END
         BOXED_TYPE##_valueOfWith##CNAME##_((TYPE)(OP((OP_LTYPE)[*lhs VALUE_METHOD], rhs)))); \
   } \
   __attribute__((always_inline)) inline BOXED_TYPE *JreBoxed##OPNAME##AssignVolatile##CNAME( \
-      volatile_id *lhs, RTYPE rhs) { \
+      __unsafe_unretained volatile_id *lhs, RTYPE rhs) { \
     BOXED_TYPE *lhsValue = JreLoadVolatileId(lhs); \
     (void)nil_chk(lhsValue); \
     return JreAssignVolatileId(lhs, \
         BOXED_TYPE##_valueOfWith##CNAME##_((TYPE)(OP((OP_LTYPE)[lhsValue VALUE_METHOD], rhs)))); \
   } \
   __attribute__((always_inline)) inline BOXED_TYPE *JreBoxed##OPNAME##AssignVolatileStrong##CNAME( \
-      volatile_id *lhs, RTYPE rhs) { \
+      __strong volatile_id *lhs, RTYPE rhs) { \
     BOXED_TYPE *lhsValue = JreLoadVolatileId(lhs); \
     (void)nil_chk(lhsValue); \
     return JreVolatileStrongAssign(lhs, \

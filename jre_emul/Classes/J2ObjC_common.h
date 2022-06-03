@@ -47,7 +47,7 @@
 # else
 #  define ARCBRIDGE
 #  define ARCBRIDGE_TRANSFER
-#  define ARC_CONSUME_PARAMETER
+#  define ARC_CONSUME_PARAMETER NS_RELEASES_ARGUMENT
 #  define AUTORELEASE(x) [x autorelease]
 #  define RELEASE_(x) [x release]
 #  define RETAIN_(x) [x retain]
@@ -68,7 +68,7 @@ void JreThrowClassCastExceptionWithIOSClass(id p, IOSClass *cls) __attribute__((
 void JreThrowArithmeticExceptionWithNSString(NSString *msg) __attribute__((noreturn));
 
 id JreStrongAssign(__strong id *pIvar, id value);
-id JreStrongAssignAndConsume(__strong id *pIvar, NS_RELEASES_ARGUMENT id value);
+id JreStrongAssignAndConsume(__strong id *pIvar, ARC_CONSUME_PARAMETER id value);
 
 id JreLoadVolatileId(volatile_id *pVar);
 id JreAssignVolatileId(volatile_id *pVar, id value);
@@ -81,7 +81,7 @@ void JreReleaseVolatile(volatile_id *pVar);
 id JreRetainedLocalValue(id value);
 
 id JreRetainedWithAssign(id parent, __strong id *pIvar, id value);
-id JreVolatileRetainedWithAssign(id parent, volatile_id *pIvar, id value);
+id JreVolatileRetainedWithAssign(id parent, __strong volatile_id *pIvar, id value);
 void JreRetainedWithRelease(id parent, id child);
 void JreVolatileRetainedWithRelease(id parent, volatile_id *pVar);
 
